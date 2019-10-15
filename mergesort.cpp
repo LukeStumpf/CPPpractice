@@ -1,81 +1,69 @@
+// Inspired by Programming Foundations: Algorithms - Implement the merge sort on LinkedinLearning
 #include <iostream>
 #include <vector>
 
 using namespace std;
+   
+vector<int> items = {6, 20, 8, 19, 56, 23, 87, 41, 49, 53};
 
-void print(vector<int> &arr) {
-   int length = arr.size();
-   for (int i = 0; i < length; i++)
-    cout << arr[i] << " ";
-  cout << endl;
-}
+void mergeSort(vector<int>& dataSet)
+{
+  if (dataSet.size() > 1)
+  {
+    auto mid = dataSet.begin() + dataSet.size() / 2;
+    vector<int> leftVec(dataSet.begin(), mid);
+    vector<int> rightVec(mid, dataSet.end());
 
-void bubbleSort(vector<int> &arr){
-  
-  int length = arr.size();
-  for (int i = 0; i < length; i++) {
-    for (int j = 0; j < length; j++) {
-      if(arr[i] < arr[j]) {
-       int temp = arr[j];
-       arr[j] = arr[i];
-       arr[i] = temp;
+    // recursively break down the vectors
+    mergeSort(leftVec);
+    mergeSort(rightVec);
+
+    // perform merging
+    int i = 0; // index into the left vector
+    int j = 0; // index into right vector
+    int k = 0; // index into merged vector
+
+    // while both vectors have content
+    int leftVecSize = leftVec.size();
+    int rightVecSize = rightVec.size();
+    while (i < leftVecSize && j < rightVecSize)
+    {
+      if (leftVec[i] < rightVec[j])
+      {
+        dataSet[k] = leftVec[i];
+        i++;
       }
+      else
+      {
+        dataSet[k] = rightVec[j];
+        j++;
+      }
+      k++;
+    }
+
+    // if left vector still has values, add them
+    while (i < leftVecSize)
+    {
+      dataSet[k] = leftVec[i];
+      i++;
+      k++;
+    }
+
+    // if right vector still has values, add them
+    while (j < rightVecSize)
+    {
+      dataSet[k] = rightVec[j];
+      j++;
+      k++;
     }
   }
-  
 }
 
-vector<int> merge(vector<int> &left, vector<int> &right) {
-  if(left.size() != 1) {
-    bubbleSort(left);
-  }
-  
-  if (right.size() != 1)
-    bubbleSort(right);
-  
-  vector<int> combined;
-  combined.reserve(left.size() + right.size());
-  combined.insert(combined.end(), left.begin(), left.end());
-  combined.insert(combined.end(), right.begin(), right.end());
-  
-  bubbleSort(combined);
-  return combined;
-}
-
-
-void mergeSort(vector<int> &arr) {
-  if (arr.size() == 1)
-    return;
-
-  auto midpoint = arr.begin() + arr.size() / 2;
-
-  vector<int> firstHalf(arr.size()/2, 0);
-  copy(arr.begin(), midpoint, firstHalf.begin());
-  cout << "First Half: "; print(firstHalf);
-
-  vector<int> secondHalf(arr.size() - arr.size()/2, 0);
-  copy(midpoint, arr.end(), secondHalf.begin());
-  cout << "Second Half: "; print(secondHalf);
-
-  mergeSort(firstHalf);
-  mergeSort(secondHalf);
-
-  arr = merge(firstHalf, secondHalf);
-}
-
-int main() {
-
-  vector<int> arr = { 75, 43, 126, 12, 33, 4, 679, 21, 22, 34, 5, 4 };
-  
-  cout << "Vector before merge sort: ";
-  print(arr);
-  cout << endl;
-  
-  mergeSort(arr);
-  
-  cout << endl;
-  cout << "Vector after merge sort: ";
-  print(arr);
-  
-  return 0;
+int main() 
+{
+  for (auto x : items)
+    cout << x << " ";
+  mergeSort(items);
+  for (auto x : items)
+    cout << x << " ";
 }
